@@ -1,0 +1,230 @@
+package com.company;
+import java.security.Provider;
+import java.util.ArrayList;
+
+       // Створіть наступну  модель: є сервісне підприємство, *яке має базу клієнтів*, які користувались
+        //його послугами. Підприємство повинно мати можливість *створювати нові послуги*
+        //та пропонувати їх в першу чергу вже існуючим клієнтам, *редагувати та видаляти
+        //існуючі послуги.* *Всі клієнти діляться на 3 групи згідно рівня лояльності до
+        //підприємства- якщо обсяг послуг, які отримує клієнт не перевищує 10000 на
+        //місяць-це клієнт групи С. Ці клієнти мають скидку 10%, якщо від 10000 до
+        //15000 - клієнт групи В, якщо більше 15000 - це категорія А. Група В має
+        //скидки 15%, А- 20 %.* Модель повинна дозволяти створювати звіти по групам
+        //клієнтів,шукати послуги та  користуватися послугами підприємства,платити за них.
+
+class Company
+{
+    ArrayList<Service> services = new ArrayList<Service>();
+
+
+
+    void ServiceShow(Service service)
+    {
+        System.out.println("Все услуги компании: ");
+        for(int f = 0; f < services.size(); f++)
+        {
+            System.out.println((f + 1) + ": "+ services.get(f).name);
+        }
+    }
+
+    void ReportByGroup(Loyality group)
+    {
+        System.out.println("Група: " + group);
+        for(int f = 0; f < services.size(); f++)
+        {
+            System.out.println("Имя: " + services.get(f).name);
+        }
+
+    }
+
+}
+
+class Service extends Company
+{
+    String name;
+    double price;
+    Service(String name, double price)
+    {
+        this.name = name;
+        this.price = price;
+    }
+
+    void ChangeService(String name, int price)
+    {
+        this.name = name;
+        this.price = price;
+    }
+
+    void ServiceInfo()
+    {
+        System.out.println(name + "  " + price);
+    }
+
+    void AddService(Service service)
+    {
+        services.add(service);
+    }
+
+    void DeleteService(Service service)
+    {
+        services.remove(service);
+    }
+
+
+    void SearchService(Service service)
+    {
+        for(int f = 0; f < services.size(); f++)
+        {
+            if(services.get(f).name.contentEquals(service.name))
+            {
+                System.out.println(service.name + "   Присутнє");
+            }
+            else
+            {
+                System.out.println(service.name + "   Відсутнє");
+            }
+        }
+
+    }
+
+}
+
+class Client extends Company
+{
+    ArrayList<Service> servicesClient = new ArrayList<Service>();
+    ArrayList<Service> Client = new ArrayList<Service>();
+    String name;
+    float priceForMonth;
+    double money;
+    Loyality group;
+    double moneyLoyality;
+
+    public Client(String name, double money, Service serviceClient) {
+        this.name = name;
+        this.money = money;
+
+    }
+
+    void UseService(Service service)
+    {
+        servicesClient.add(service);
+
+    }
+
+    void UseServiceShow(Client client)
+    {
+        System.out.println("Имя клиента: " + name);
+        System.out.println("Услуги которыми пользывался клиент: ");
+        for(int j = 0; j < servicesClient.size(); j++){
+            System.out.println((j+1)+ ": " + servicesClient.get(j).name);
+        }
+    }
+
+
+    void SumPrice()
+    {
+        for(int i = 0; i < servicesClient.size(); i++)
+        {
+            priceForMonth += servicesClient.get(i).price;
+        }
+        System.out.println("Сколько должен клиент: " + priceForMonth + "$");
+
+        if(priceForMonth < 10000)
+        {
+            this.group = Loyality.Group_C;
+            System.out.println("Група клиента: " + group);
+            moneyLoyality = priceForMonth - priceForMonth*0.10;
+            System.out.println ("Сколько должен клиент с учетом скидки: " + moneyLoyality + "$");
+        }
+        else if(priceForMonth >10000 && priceForMonth <15000)
+        {
+            this.group = Loyality.Group_B;
+            System.out.println("Група клиента: " + group);
+            moneyLoyality = priceForMonth - priceForMonth*0.15;
+            System.out.println ("Сколько должен клиент с учетом скидки: " + moneyLoyality + "$");
+        }
+        else if(priceForMonth >= 15000)
+        {
+            this.group = Loyality.Group_A;
+            System.out.println("Група клиента: " + group);
+            moneyLoyality = priceForMonth - priceForMonth*0.20;
+            System.out.println ("Сколько должен клиент с учетом скидки: " + moneyLoyality + "$");
+        }
+
+    }
+
+    void PaymentForServices()
+    {
+        double balanceMoney = money - moneyLoyality;
+
+        if(balanceMoney >= 0)
+        {
+            System.out.println("Успех!");
+            System.out.println("Остаток на счете: " + balanceMoney + "$");
+        }
+        else
+        {
+            System.out.println("Недостаточно средств для оплаты услуги!");
+        }
+    }
+
+
+
+}
+
+
+enum Loyality
+{
+    Group_A(15000, 20),
+    Group_B(10000,15),
+    Group_C(10000,10);
+    private int price;
+    private int discount;
+
+    Loyality(int price, int discount) {
+        this.price = price;
+        this.discount = discount;
+    }
+
+    int GetPrice()
+    {
+        return this.price;
+    }
+
+    int GetDiscount()
+    {
+        return this.discount;
+    }
+}
+
+
+public class Main {
+    public static void main(String[] args) {
+        Service service = new Service("Помыть машину", 25);
+        service.AddService(service);
+
+        Service service1 = new Service("Помыть руки", 21);
+
+        Service service3 = new Service("Снять колесо", 14000);
+        service.AddService(service3);
+
+        Company company = new Company();
+        service.ChangeService("Помыть мопед", 232);
+        service.ServiceShow(service);
+
+        Client client1 = new Client("Вася", 13000, service3);
+        client1.UseService(service3);
+        client1.UseService(service);
+        client1.UseService(service1);
+        client1.UseServiceShow(client1);
+        client1.SumPrice();
+        client1.PaymentForServices();
+
+        company.ReportByGroup(Loyality.Group_C);
+
+
+
+
+
+    }
+}
