@@ -1,0 +1,260 @@
+package com.company;
+
+//Створіть просту  ієрархію спадкування, яка відповідає сутностям Користувач
+//      (властивості- логін,пароль,емейл,телефон) та Покупець (рахунок, адреса доставки),
+//Продавець (№ підрозділу, дата прийняття на роботу, загальна сума торгових бонусів).
+//Продемонструйте перевантаження конструкторів та методів, перевизначення методів,
+//особливості роботи конструкторів при спадкуванні.
+
+abstract class User{
+    protected String login;
+    protected String password;
+    protected String email;
+    protected String number;
+
+    User(String login){
+        this.login=login;
+    }
+
+    User(String login, String password){
+        this(login);
+        this.password=password;
+    }
+
+    User(String login, String password, String email){
+        this(login, password);
+        this.email=email;
+    }
+
+    User(String login, String password, String email, String number){
+        this(login, password, email);
+        this.number=number;
+    }
+    void InfoUser(){
+        System.out.println("Login: "+login);
+        System.out.println("Password: "+password);
+        System.out.println("Email: "+email);
+        System.out.println("Number: "+number);
+    }
+
+}
+class Customer extends User{
+    protected int score;
+    protected String address;
+    protected int money;
+
+    Customer(String login, String password, String email, String number, int score, String address){
+        super(login,  password,  email,  number);
+        this.score=score;
+        this.address=address;
+    }
+
+    void MoneyInfo(){
+        System.out.println("Money: "+money);
+    }
+
+    void MoneyInfo(int money){
+        System.out.println("Money: "+money);
+    }
+    @Override
+    void InfoUser() {
+        super.InfoUser();
+        System.out.println("Score: "+score);
+        System.out.println("Address: "+address);
+
+    }
+}
+
+class Seller extends  User{
+    protected int numberPidrosdil;
+    protected String date;
+    protected int sumTorgBon;
+
+    Seller(String login, String password, String email, String number, int numberPidros, String date, int sumTorgBon){
+        super(login,  password,  email,  number);
+        this.numberPidrosdil=numberPidros;
+        this.date=date;
+        this.sumTorgBon=sumTorgBon;
+    }
+
+    @Override
+    void InfoUser() {
+        super.InfoUser();
+        System.out.println("NumberPidros: " + numberPidrosdil);
+        System.out.println("Date: " + date);
+        System.out.println("SumTorgBon: " + sumTorgBon);
+    }
+}
+
+    //Створіть просту  ієрархію спадкування, яка відповідає сутностям Товар
+      //  (властивості - назва, виробник, дата виготовлення, ціна)
+    //та Продукти харчування (термін придатності, харчова
+      //  група(молочні, м'ясні, бакалея та інше)), РадіоЕлектроніка (вид електроніки, гарантійний термін).
+       // Продемонструйте перевантаження конструкторів та методів, перевизначення методів,
+    //        особливості роботи конструкторів при спадкуванні.
+
+abstract class Tovar{
+    protected String name;
+    protected String maker;
+    protected String dateMake;
+    protected int price;
+
+    Tovar(String name){
+        this.name=name;
+    }
+
+    Tovar(String name, String maker){
+        this(name);
+        this.maker=maker;
+    }
+
+    Tovar(String name, String maker, String dateMake){
+        this(name, maker);
+        this.dateMake=dateMake;
+    }
+
+    Tovar(String name, String maker, String dateMake, int price){
+        this(name, maker, dateMake);
+        this.price=price;
+    }
+    void InfoTovar(){
+        System.out.println("Name: "+name);
+        System.out.println("Maker: "+maker);
+        System.out.println("DateMake: "+dateMake);
+        System.out.println("Price: "+price);
+    }
+
+}
+class ProduktHurch extends Tovar{
+    protected String harchGroup;
+    protected String terminPredatnost;
+    protected int money;
+
+    ProduktHurch(String name, String maker, String dateMake, int price, String harchGroup, String terminPredatnost){
+        super(name,  maker,  dateMake,  price);
+        this.harchGroup=harchGroup;
+        this.terminPredatnost=terminPredatnost;
+    }
+
+    void MoneyInfo(){
+        System.out.println("Money: "+money);
+    }
+
+    void MoneyInfo(int money){
+        System.out.println("Money: "+money);
+    }
+    @Override
+    void InfoTovar() {
+        super.InfoTovar();
+        System.out.println("HarchGroup: "+harchGroup);
+        System.out.println("TerminPredatnost: "+terminPredatnost);
+
+    }
+}
+
+class RadioElectronica extends  Tovar{
+    protected String garantTermin;
+    protected String vidElecton;
+
+    RadioElectronica(String name, String maker, String dateMake, int price, String garantTermin, String vidElecton){
+        super(name,  maker,  dateMake,  price);
+        this.garantTermin=garantTermin;
+        this.vidElecton=vidElecton;
+    }
+
+    @Override
+    void InfoTovar() {
+        super.InfoTovar();
+        System.out.println("garantTermin: " + garantTermin);
+        System.out.println("vidElecton: " + vidElecton);
+    }
+}
+//Продемонструйте у коді генерацію свого виключення AgeStudentException
+//у конструкторі класу Student при спробі створити об'єкт зі значенням віку помилковим.
+class Student1{
+    int age;
+    Student1(int setAge) throws AgeStudentException{
+        if(setAge<16) throw new AgeStudentException();
+    }
+}
+class AgeStudentException extends Exception{
+    public AgeStudentException(){
+        System.out.println("Студенту не може бути менше 17");
+    }
+}
+
+public class Main {
+
+
+    //Продемонструйте у коді  2 способа  обробки виключних ситуацій у методі
+    //(з try-catch и  throws), а також особливості використання блока finally.
+    //У якості обробляємо виключення оберіть будь яке =checked= виключення.
+
+    public int GetFactorial(int num) throws Exception{
+
+        if(num<1) throw new Exception("Число не може бути менше 1");
+        int result=1;
+        for(int i=1; i<=num;i++){
+            result*=i;
+        }
+        return result;
+    }
+
+    public int GetFactorial2(int num){
+        int result=1;
+        try{
+            if(num<1) throw new Exception("Число не може бути менше 1");
+
+            for(int i=1; i<=num;i++){
+
+                result*=i;
+            }
+        }
+        catch(Exception ex){
+
+            System.out.println(ex.getMessage());
+        }
+        return result;
+    }
+
+
+    public static void main(String[] args) {
+        Main example = new Main();
+
+        try {
+            Student1 st = new Student1(15);
+        }
+        catch (AgeStudentException ex){
+            System.out.println(ex.getMessage());
+        }
+
+        try{
+            System.out.println(example.GetFactorial(-1));
+        }catch (Exception ex){
+            System.out.println(ex.getMessage());
+        }
+        finally {
+            System.out.println("GetFactorial finished with exit code 0");
+        }
+
+        System.out.println(example.GetFactorial2(1));
+
+
+
+
+        Seller seller  = new Seller("Kirill228", "24.03.2021", "kirill228@gmail.com", "+380987654321", 56, "23.03.2021", 5830);
+        seller.InfoUser();
+
+
+        Customer custom = new Customer("24", "54050yaya", "shumakov287@gmail.com", "+380679660294", 434343, "Tavriyska 24");
+        custom.InfoUser();
+        custom.MoneyInfo(54);
+
+        ProduktHurch produktHurch = new ProduktHurch("Meat", "Ukraine", "24.03.2021", 56, "Meat", "25.03.2021");
+        produktHurch.InfoTovar();
+
+        RadioElectronica radioElectronica = new RadioElectronica("Radio", "China", "24.03.2020", 234, "None", "Neznay");
+        radioElectronica.InfoTovar();
+    }
+}
+
